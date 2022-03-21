@@ -1,4 +1,6 @@
 const jwt = require('jsonwebtoken')
+const blogModel= require("../models/blogModel")
+
 
 
 const authentication = function (req, res, next) {
@@ -21,16 +23,20 @@ const authentication = function (req, res, next) {
 }
 
 
-let authorization = function (req, res, next) {
+let authorization = async function (req, res, next) {
     try {
-        let authorId = req.params.authorId
+        let authorId = req.params.blogId
         let token = req.headers["x-api-key"]
         if (!authorId) {
             res.status(400).send({ status: false, msg: " authorId is required, BAD REQUEST" })
         }
 
         let decodedToken = jwt.verify(token, "Room No-38")
-        if (decodedToken.authorId != authorId) {
+        let blogDetails= await blogModel.findById(authorId)
+        if(!blogDetails) {
+            res.status(404).send({status: false, msg: "id not found"})
+        }
+        if (decodedToken.authorId != blogDetails.authorId) {
             return res.status(403).send({ status: false, msg: "you are not authorized" })
         }
         next()

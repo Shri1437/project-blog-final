@@ -7,23 +7,26 @@ const moment= require('moment')
 const blogSchema = new mongoose.Schema({
     title: {
         type: String,
+        trim: true,
         required: true
     },
     body: {
         type: String,
+        trim: true,
         required: true
     },
     authorId: {
         type: ObjectId,
         required: true,
-        ref: "author"
+        ref: "Author"
     },
-    tags: [String],
+    tags: [{type:String, trim: true}],
     category: {
         type: String,
+        trim: true,
         required: true
     },
-    subCategory: [String],
+    subCategory: [{type:String, trim: true}],
     isDeleted: {
         type: Boolean,
         default: false
@@ -50,4 +53,4 @@ const blogSchema = new mongoose.Schema({
 
 
 
-module.exports= mongoose.model('blog', blogSchema)
+module.exports= mongoose.model('Blog', blogSchema)
